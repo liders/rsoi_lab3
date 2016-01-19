@@ -1,0 +1,47 @@
+{% extends "page.html" %}
+
+{% macro here() -%}
+  /bid
+{%- endmacro %}
+
+{% block title %}Bid - {{ super() }}{% endblock %}
+
+{% block body %}
+  <h1>Bid</h1>
+  <form method="POST">
+    <table>
+      <tbody>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Organizer</th>
+        <th>Number tickets</th>
+        {% for event in events %}
+          <tr>
+            <td style="text-align:right;border:1px solid">{{ event['name'] }}</td>
+            <td style="text-align:right;border:1px solid">{{ event['date'] }}</td>
+            <td style="text-align:right;border:1px solid">{{ event['description'] }}</td>
+            <td style="text-align:right;border:1px solid">{{ event['organizer'] }}</td>
+            <td style="text-align:right;border:1px solid">{{ event['quantity'] }}</td>
+          </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <!--<tr>
+          <td style="text-align:right">Deliver to:</td>
+          <td>
+            <input name="number_ticket"></input>
+          </td>
+        </tr>  -->
+        <tr>
+          <td></td>
+          <td style="text-align:right">
+            <input type="submit" value="BID IT"></input>
+          </td>
+        </tr>  
+      </tbody>
+    </table>
+  </form>
+{% endblock  %}

@@ -1,0 +1,73 @@
+{% extends "page.html" %}
+
+{% macro here() -%}
+  /events/?per_page={{ per_page }}&page={{ page }}
+{%- endmacro %}
+
+{% block title %}Events - {{ super() }}{% endblock %}
+
+{% block body %}
+  <h1>Еvents</h1>
+  <form method="POST">
+    {% if user_name is none %}
+      <a href="/sign_in?redirect_to={{ here() | urlencode }}">Sign in</a>
+      <a href="/register?redirect_to={{ here() | urlencode }}">Sign up</a>
+    {% else %}
+      <a href="/me">{{ user_name }}</a>
+
+      <a href="/bid">BID IT</a>
+    {% endif%}
+    {% if page_events is not none %}
+      <table>
+        <tbody>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Organizer</th>
+          {% if user_name is not none %}
+            <th>Number tickets</th>
+          {% endif %}
+          {% for event in page_events %}
+            <tr>
+              <td style="text-align:right;border:1px solid">{{ event['name'] }}</td>
+              <td style="text-align:right;border:1px solid">{{ event['date'] }}</td>
+              <td style="text-align:right;border:1px solid">{{ event['description'] }}</td>
+              <td style="text-align:right;border:1px solid">{{ event['organizer'] }}</td>
+              {% if user_name is not none %}
+                <td style="text-align:right;border:1px solid">
+                  {{ event['quantity'] }}
+                  <form method="POST" action="{{ here() }}" style="display:inline">
+                    <input type="hidden" name="event_id" value="{{event['id']}}"></input>
+                    <input type="hidden" name="action" value="+"></input>
+                    <input type="submit" value="+"></input>
+                  </form>
+                  <form method="POST" action="{{ here() }}" style="display:inline">
+                    <input type="hidden" name="event_id" value="{{event['id']}}"></input>
+                    <input type="hidden" name="action" value="-"></input>
+                    <input type="submit" value="-"></input>
+                  </form>
+                </td>
+              {% endif %}
+            </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+      <span>
+        {% if page != 1 %}
+          <a href="?per_page={{ per_page }}&page=1">First page</a>
+        {% endif %}
+        {% if page > 1 %}
+          <a href="?per_page={{ per_page }}&page={{ page - 1}}">Previous page</a>
+        {% endif %}
+        {% if page < pages %}
+          <a href="?per_page={{ per_page }}&page={{ page + 1}}">Next page</a>
+        {% endif %}
+        {% if page != pages %}
+          <a href="?per_page={{ per_page }}&page={{ pages }}">Last page</a>
+        {% endif %}
+      </span>
+    {% else %}
+      <p>Error: <em>Events not available</em></p>
+    {% endif %}
+  </form>
+{% endblock  %}

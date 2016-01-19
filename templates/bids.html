@@ -1,0 +1,36 @@
+{% extends "page.html" %}
+
+{% macro here() -%}
+  /events/?per_page={{ per_page }}&page={{ page }}
+{%- endmacro %}
+
+{% block title %}Events - {{ super() }}{% endblock %}
+
+{% block body %}
+  <h1>Events</h1>
+  <form method="POST">
+    {% if user_name is not none %}
+      <a href="/me">{{ user_name }}</a>
+    {% endif%}
+    {% if bids is not none %}
+      <table>
+        <tbody>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Number tickets</th>
+          {% if user_name is not none %}
+          {% endif %}
+          {% for event in events %}
+            <tr>
+              <td style="text-align:right;border:1px solid">{{ event['name'] }}</td>
+              <td style="text-align:right;border:1px solid">{{ event['date'] }}</td>
+              <td style="text-align:right;border:1px solid">{{ event['quantity'] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Error: <em>Bids not available</em></p>
+    {% endif %}
+  </form>
+{% endblock  %}
